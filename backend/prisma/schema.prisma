@@ -1,4 +1,5 @@
-// prisma/schema.prisma
+
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,31 +10,32 @@ datasource db {
 }
 
 model User {
-  wallet_address   String   @id
-  username         String?
-  bio              String?
-  profile_pic_url  String?
-  posts            Post[]
-  likes            Like[]
-  comments         Comment[]
+  wallet_address String   @id
+  username       String?
+  bio            String?
+  profile_pic_url String?
+  posts          Post[]
+  likes          Like[]
+  comments       Comment[]
 }
 
 model Post {
-  id              Int       @id @default(autoincrement())
-  wallet_address  String
-  content         String    @db.VarChar(280)
-  timestamp       DateTime  @default(now())
-  user            User      @relation(fields: [wallet_address], references: [wallet_address])
-  comments        Comment[]
-  likes           Like[]
+  id             Int       @id @default(autoincrement())
+  wallet_address String
+  content        String    @db.VarChar(280)
+  timestamp      DateTime  @default(now())
+
+  user     User    @relation(fields: [wallet_address], references: [wallet_address])
+  likes    Like[]
+  comments Comment[]
 }
 
 model Like {
   post_id        Int
   wallet_address String
 
-  post           Post   @relation(fields: [post_id], references: [id])
-  user           User   @relation(fields: [wallet_address], references: [wallet_address])
+  post   Post @relation(fields: [post_id], references: [id])
+  user   User @relation(fields: [wallet_address], references: [wallet_address])
 
   @@id([post_id, wallet_address])
 }
@@ -45,6 +47,7 @@ model Comment {
   content        String
   timestamp      DateTime  @default(now())
 
-  post           Post   @relation(fields: [post_id], references: [id])
-  user           User   @relation(fields: [wallet_address], references: [wallet_address])
+  post Post @relation(fields: [post_id], references: [id])
+  user User @relation(fields: [wallet_address], references: [wallet_address])
 }
+
