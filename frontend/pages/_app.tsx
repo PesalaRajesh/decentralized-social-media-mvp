@@ -1,10 +1,10 @@
-import '../styles/globals.css';
-import { AppProps } from 'next/app';
-import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import '@rainbow-me/rainbowkit/styles.css';
-import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-import { mainnet, sepolia } from 'wagmi/chains';
+import { WagmiConfig, configureChains, createConfig } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
+import { sepolia } from 'wagmi/chains';
+import {
+  RainbowKitProvider,
+  getDefaultWallets,
+} from '@rainbow-me/rainbowkit';
 
 const { chains, publicClient } = configureChains(
   [sepolia],
@@ -12,8 +12,8 @@ const { chains, publicClient } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'Decentralized Social',
-  projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // You can register one on WalletConnect cloud
+  appName: 'Decentralized Social App',
+  projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // ← Use a dummy string if testing
   chains,
 });
 
@@ -23,7 +23,7 @@ const wagmiConfig = createConfig({
   publicClient,
 });
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }) {
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains}>
