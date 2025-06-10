@@ -1,34 +1,40 @@
-import { WagmiConfig, configureChains, createConfig } from 'wagmi';
-import { publicProvider } from 'wagmi/providers/public';
-import { sepolia } from 'wagmi/chains';
-import {
-  RainbowKitProvider,
-  getDefaultWallets,
-} from '@rainbow-me/rainbowkit';
+// pages/_app.tsx
 
-const { chains, publicClient } = configureChains(
+import '@/styles/globals.css'
+import type { AppProps } from 'next/app'
+
+import {
+  getDefaultWallets,
+  RainbowKitProvider,
+} from '@rainbow-me/rainbowkit'
+
+import { configureChains, createClient, WagmiConfig } from 'wagmi'
+import { publicProvider } from 'wagmi/providers/public'
+
+import { sepolia } from 'wagmi/chains' // ✅ Make sure this is imported
+
+const { chains, provider } = configureChains(
   [sepolia],
   [publicProvider()]
-);
+)
 
 const { connectors } = getDefaultWallets({
-  appName: 'Decentralized Social App',
-  projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // ← Use a dummy string if testing
+  appName: 'Decentralized Social Media',
   chains,
-});
+})
 
-const wagmiConfig = createConfig({
+const wagmiClient = createClient({
   autoConnect: true,
   connectors,
-  publicClient,
-});
+  provider,
+})
 
-export default function App({ Component, pageProps }) {
+export default function App({ Component, pageProps }: AppProps) {
   return (
-    <WagmiConfig config={wagmiConfig}>
+    <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains}>
         <Component {...pageProps} />
       </RainbowKitProvider>
     </WagmiConfig>
-  );
+  )
 }
